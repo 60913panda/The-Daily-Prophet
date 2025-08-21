@@ -27,13 +27,13 @@
             box-shadow: 10px 10px 20px rgba(0,0,0,0.3);
         }
         .pdf-thumbnail-wrapper {
-            aspect-ratio: 3 / 4; /* 維持比例 */
-            overflow: hidden; /* 隱藏捲軸 */
-            pointer-events: none; /* 讓底下的點擊事件可以觸發 */
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            pointer-events: none;
         }
         .pdf-thumbnail-wrapper iframe {
             transform-origin: top left;
-            transform: scale(0.5); /* 嘗試縮小內容以顯示更多 */
+            transform: scale(0.5);
             width: 200%;
             height: 200%;
         }
@@ -114,7 +114,6 @@
                     
                     const embedUrl = `https://drive.google.com/file/d/${fileId}/preview`;
 
-                    // **實驗性變更：將 <img> 替換為 <iframe> 來直接顯示 PDF**
                     card.innerHTML = `
                         <div class="pdf-thumbnail-wrapper w-full rounded mb-4 border bg-gray-200">
                            <iframe src="${embedUrl}" class="w-full h-full" frameborder="0" scrolling="no"></iframe>
@@ -122,7 +121,6 @@
                         <h3 class="text-center font-bold text-lg">${title}</h3>
                     `;
                     
-                    // 讓整個卡片都可以點擊
                     card.style.cursor = 'pointer';
                     card.addEventListener('click', () => {
                         pdfViewer.src = embedUrl;
@@ -150,6 +148,33 @@
                 pdfViewer.src = '';
             }
         });
+
+        // *** 新增：禁用右鍵選單和 F12 ***
+        document.addEventListener('contextmenu', event => {
+            event.preventDefault();
+            // 您可以在這裡加入一個友善的提示訊息
+            // alert("為了保護內容，本站已禁用右鍵選單。");
+        });
+
+        document.addEventListener('keydown', event => {
+            // 禁用 F12
+            if (event.key === 'F12' || event.keyCode === 123) {
+                event.preventDefault();
+            }
+            // 禁用 Ctrl+Shift+I (Chrome/Edge/Firefox)
+            if (event.ctrlKey && event.shiftKey && event.key === 'I') {
+                event.preventDefault();
+            }
+            // 禁用 Ctrl+Shift+J (Chrome/Edge)
+            if (event.ctrlKey && event.shiftKey && event.key === 'J') {
+                event.preventDefault();
+            }
+            // 禁用 Ctrl+U (查看原始碼)
+            if (event.ctrlKey && event.key === 'U') {
+                event.preventDefault();
+            }
+        });
+
     </script>
 
 </body>
